@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
+  <div class="bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-xl max-w-2xl animate-fadeIn">
+    <h1 class="text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">Александр</h1>
+    <p class="text-xl mb-6">Python Backend Developer</p>
+    <p class="mb-8">Создаю быстрые, масштабируемые и современные backend решения на FastAPI</p>
+  </div>
+</section>
+
+<!-- About -->
+<section class="py-20 px-6 flex flex-col items-center gap-6">
+  <h2 class="text-4xl font-bold mb-4">Обо мне</h2>
+  <p class="max-w-2xl text-center bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-md">
+    Опыт работы с Python, FastAPI, Django, PostgreSQL, Docker, Redis. Разработка асинхронных API, микросервисов и RESTful решений.
+  </p>
+</section>
+
+<!-- Projects -->
+<section class="py-20 px-6 flex flex-col items-center gap-8">
+  <h2 class="text-4xl font-bold">Проекты</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+    <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-transform">
+      <h3 class="text-2xl font-semibold mb-2">Проект 1</h3>
+      <p>FastAPI backend с PostgreSQL и Docker, реализован REST API для управления задачами.</p>
+    </div>
+    <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg hover:scale-105 transition-transform">
+      <h3 class="text-2xl font-semibold mb-2">Проект 2</h3>
+      <p>Асинхронный Telegram-бот с Celery и Redis для уведомлений.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="py-20 px-6 flex flex-col items-center gap-6">
+  <h2 class="text-4xl font-bold mb-6">Связаться со мной</h2>
+  <form id="contactForm" class="flex flex-col gap-4 w-full max-w-lg bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-lg">
+    <input type="text" name="name" placeholder="Ваше имя" class="p-2 rounded text-black" required>
+    <input type="email" name="email" placeholder="Email" class="p-2 rounded text-black" required>
+    <textarea name="message" placeholder="Сообщение" class="p-2 rounded text-black" required></textarea>
+    <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 transition-colors py-2 rounded text-white font-semibold">Отправить</button>
+  </form>
+  <div id="response" class="mt-4 text-center"></div>
+</section>
+
+<!-- Footer -->
+<footer class="py-6 text-center bg-white/10 backdrop-blur-md mt-12 rounded-t-xl">
+  <p>© 2026 Александр | <a href="https://github.com" class="underline">GitHub</a> | <a href="mailto:your.email@example.com" class="underline">Email</a></p>
+</footer>
+
+{% endblock %}
+
