@@ -2,7 +2,7 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     APP_NAME: str = "Portfolio FastAPI"
-    CONTACT_EMAIL: str = "your.email@example.com"
+    CONTACT_EMAIL: str = "adrolv@rambler.ru"
 
     class Config:
         env_file = ".env"

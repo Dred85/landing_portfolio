@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 # Настройки SMTP (можно подставить свои)
 SMTP_SERVER = "smtp.rambler.ru"    # SMTP-сервер твоего почтового провайдера
 SMTP_PORT = 587                     # Обычно 587 для TLS
-SMTP_USER = "adrolv08111985@gmail.com"  # Твой email
-SMTP_PASS = "your_app_password"      # Пароль или app password
+SMTP_USER = "adrolv@rambler.ru"  # Твой email
+SMTP_PASS = "123456A"      # Пароль или app password
 
 async def process_contact_form(form: ContactForm):
     """
