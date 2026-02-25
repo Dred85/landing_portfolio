@@ -1,19 +1,11 @@
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 router = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/about", response_class=HTMLResponse)
-async def about_page():
-    html_content = """
-    <html>
-        <head>
-            <title>About</title>
-        </head>
-        <body>
-            <h1>About Page</h1>
-            <p>This is the about page for your portfolio FastAPI app.</p>
-        </body>
-    </html>
-    """
-    return html_content
+async def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
