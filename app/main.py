@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from prometheus_fastapi_instrumentator import Instrumentator
-from app.routers import home, contact, about
+from app.routers import home, contact, about, projects
 
 # -----------------
 # LOGGING
@@ -70,6 +70,7 @@ app.mount("/static", StaticFiles(directory=static_path), name="static")
 app.include_router(home.router)
 app.include_router(contact.router)
 app.include_router(about.router)
+app.include_router(projects.router)
 
 
 # -----------------
