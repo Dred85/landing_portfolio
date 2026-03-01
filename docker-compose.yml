@@ -23,6 +23,7 @@ services:
   locust:
     image: locustio/locust:2.19.0
     container_name: locust
+    entrypoint: ["sh", "/mnt/locust/docker-entrypoint.sh"]
     ports:
       - "8089:8089"
     volumes:
@@ -31,7 +32,6 @@ services:
       -f /mnt/locust/loadshape_stability.py
       --host=http://web:8000
       --web-host=0.0.0.0
-      --web-enable-prometheus
     depends_on:
       - web
     networks:
