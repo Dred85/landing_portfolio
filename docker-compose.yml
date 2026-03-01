@@ -1,5 +1,12 @@
 version: "3.9"
 
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  grafana_data:
+
 services:
   web:
     build: .
@@ -9,6 +16,26 @@ services:
     environment:
       - APP_NAME=Portfolio FastAPI
       - CONTACT_EMAIL=your.email@example.com
+    networks:
+      - monitoring
+    restart: unless-stopped
+
+  locust:
+    image: locustio/locust:2.19.0
+    container_name: locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./locust:/mnt/locust
+    command: >
+      -f /mnt/locust/loadshape_stability.py
+      --host=http://web:8000
+      --web-host=0.0.0.0
+      --web-enable-prometheus
+    depends_on:
+      - web
+    networks:
+      - monitoring
     restart: unless-stopped
 
   prometheus:
@@ -20,6 +47,9 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - web
+      - locust
+    networks:
+      - monitoring
     restart: unless-stopped
 
   grafana:
@@ -34,7 +64,6 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
+    networks:
+      - monitoring
     restart: unless-stopped
-
-volumes:
-  grafana_data:
