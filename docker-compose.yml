@@ -13,9 +13,16 @@ services:
     container_name: fastapi_app
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
-      - APP_NAME=Portfolio FastAPI
-      - CONTACT_EMAIL=your.email@example.com
+      - APP_NAME=${APP_NAME:-Portfolio FastAPI}
+      - CONTACT_EMAIL=${CONTACT_EMAIL:-your.email@example.com}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_TO_EMAIL=${SMTP_TO_EMAIL}
     networks:
       - monitoring
     restart: unless-stopped
