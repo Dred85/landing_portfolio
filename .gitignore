@@ -22,3 +22,11 @@ poetry.lock
 
 # Logs
 *.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+.hypothesis/

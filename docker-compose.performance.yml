@@ -1,5 +1,15 @@
 version: "3.9"
 
+# Docker Compose конфигурация для тестирования производительности
+# 
+# Использование:
+#   docker compose -f docker-compose.performance.yml up --build
+#
+# Особенности:
+#   - DISABLE_EMAIL=true для избежания спама при POST тестах
+#   - Быстрый loadshape_performance.py (3 минуты)
+#   - Все метрики экспортируются в Prometheus/Grafana
+
 networks:
   monitoring:
     driver: bridge
@@ -10,7 +20,7 @@ volumes:
 services:
   web:
     build: .
-    container_name: fastapi_app
+    container_name: fastapi_app_perf
     ports:
       - "8000:8000"
     env_file:
@@ -23,36 +33,33 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
       - SMTP_TO_EMAIL=${SMTP_TO_EMAIL}
-      # 🔒 Заглушка email: true = не отправлять, false = реальная отправка
-      # Для Locust тестов рекомендуется DISABLE_EMAIL=true (добавь в .env)
-      - DISABLE_EMAIL=${DISABLE_EMAIL:-false}
+      - DISABLE_EMAIL=true  # 🔒 Заглушка для тестов производительности
     networks:
       - monitoring
     restart: unless-stopped
 
   locust:
     image: locustio/locust:2.19.0
-    container_name: locust
+    container_name: locust_perf
     entrypoint: ["sh", "/mnt/locust/docker-entrypoint.sh"]
     ports:
       - "8089:8089"
     volumes:
       - ./locust:/mnt/locust
     command: >
-      -f /mnt/locust/loadshape_stability.py
+      -f /mnt/locust/loadshape_performance.py
       --host=http://web:8000
       --web-host=0.0.0.0
+      --headless
+      --run-time 3m
     depends_on:
       - web
     networks:
       - monitoring
-    restart: unless-stopped
-    # ⚠️  ВАЖНО: Для избежания спама при POST тестах
-    #     установите DISABLE_EMAIL=true в .env файле!
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: prometheus_perf
     ports:
       - "9090:9090"
     volumes:
@@ -62,11 +69,10 @@ services:
       - locust
     networks:
       - monitoring
-    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: grafana_perf
     ports:
       - "3000:3000"
     environment:
@@ -78,4 +84,3 @@ services:
       - prometheus
     networks:
       - monitoring
-    restart: unless-stopped

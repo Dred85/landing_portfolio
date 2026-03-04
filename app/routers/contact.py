@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
+from pydantic import ValidationError
 import os
 
 from app.schemas.contact import ContactForm
@@ -25,20 +26,28 @@ async def post_contact_form(
     email: str = Form(...),
     message: str = Form(...)
 ):
-    # Создаём объект ContactForm из данных формы
-    form = ContactForm(name=name, email=email, message=message)
-    result = await process_contact_form(form)
-    
-    # Рендерим страницу с результатом
-    if result["status"] == "success":
+    try:
+        # Создаём объект ContactForm из данных формы
+        form = ContactForm(name=name, email=email, message=message)
+        result = await process_contact_form(form)
+        
+        # Рендерим страницу с результатом
+        if result["status"] == "success":
+            return templates.TemplateResponse(
+                "contact.html", 
+                {"request": request, "success": True}
+            )
+        else:
+            return templates.TemplateResponse(
+                "contact.html", 
+                {"request": request, "error": result["message"]}
+            )
+    except ValidationError as e:
+        # Обработка ошибок валидации (например, невалидный email)
+        error_msg = "Пожалуйста, проверьте правильность введённых данных"
         return templates.TemplateResponse(
-            "contact.html", 
-            {"request": request, "success": True}
-        )
-    else:
-        return templates.TemplateResponse(
-            "contact.html", 
-            {"request": request, "error": result["message"]}
+            "contact.html",
+            {"request": request, "error": error_msg}
         )
 
 # POST /api/contact - JSON API endpoint (для программных запросов)
